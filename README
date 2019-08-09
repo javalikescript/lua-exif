@@ -1,0 +1,5 @@
+The Lua exif module provides functions to deal with EXIF image information.
+
+See the sample lua files to see the full usages.
+
+Lua exif is covered by the MIT license.
