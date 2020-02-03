@@ -387,6 +387,9 @@ static int luaexif_loader_gc(lua_State *l) {
 ********************************************************************************
 */
 
+#define LUA_EXIF_VERSION "0.1"
+#include <config.h>
+
 LUALIB_API int luaopen_exif(lua_State *l) {
 	trace("luaopen_exif()\n");
 
@@ -420,7 +423,7 @@ LUALIB_API int luaopen_exif(lua_State *l) {
 	luaL_setfuncs(l, reg, 0);
 	lua_pushliteral(l, "Lua exif");
 	lua_setfield(l, -2, "_NAME");
-	lua_pushliteral(l, "0.1");
+	lua_pushfstring (l, "%s libexif %s", LUA_EXIF_VERSION, VERSION);
 	lua_setfield(l, -2, "_VERSION");
 	trace("luaopen_exif() done\n");
 	return 1;
