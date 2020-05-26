@@ -1,4 +1,3 @@
-local bufferLib = require('buffer')
 local exifLib = require('exif')
 
 local function printTable(t, i, p)
