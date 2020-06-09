@@ -86,7 +86,7 @@ static int luaexif_data_save(lua_State *l) {
   }
   lua_pushlstring(l, (const char *)d, (size_t)ds);
   free(d);
-  return 0;
+  return 1;
 }
 
 static int luaexif_data_get_byte_order(lua_State *l) {
