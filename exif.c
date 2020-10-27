@@ -241,6 +241,11 @@ static int luaexif_data_from_table(lua_State *l) {
 static int luaexif_data_to_table(lua_State *l) {
   trace("luaexif_data_to_table()\n");
   LuaExifData *data = (LuaExifData *)luaL_checkudata(l, 1, "exif_data");
+  int formatMask = 0xffff; // 0xffbf; // all except undefined
+  if (lua_isinteger(l, 2)) {
+    formatMask = lua_tointeger(l, 2);
+  }
+  int notOnlyValue = !lua_toboolean(l, 3);
   // table map with an item per EXIF IFD
   lua_newtable(l);
   ExifByteOrder bo = exif_data_get_byte_order(data->exifData);
@@ -255,6 +260,9 @@ static int luaexif_data_to_table(lua_State *l) {
     for (entryIndex = 0; entryIndex < content->count; entryIndex++) {
       ExifEntry *entry = content->entries[entryIndex];
       char value[1024];
+      if ((entry->format < 1) || ((formatMask & (1 << (entry->format - 1))) == 0)) {
+        continue;
+      }
       /* Get the contents of the tag in human-readable form */
       exif_entry_get_value(entry, value, sizeof(value));
       //trimSpaces(value);
@@ -264,12 +272,14 @@ static int luaexif_data_to_table(lua_State *l) {
         lua_pushstring(l, name);
         // table map with an item per entry
         lua_newtable(l);
-        SET_TABLE_KEY_INTEGER(l, COMPONENTS_PROPERTY_NAME, entry->components);
-        SET_TABLE_KEY_INTEGER(l, FORMAT_PROPERTY_NAME, entry->format);
-        SET_TABLE_KEY_INTEGER(l, SIZE_PROPERTY_NAME, entry->size);
-        SET_TABLE_KEY_INTEGER(l, TAG_PROPERTY_NAME, entry->tag);
+        if (notOnlyValue) {
+          SET_TABLE_KEY_INTEGER(l, COMPONENTS_PROPERTY_NAME, entry->components);
+          SET_TABLE_KEY_INTEGER(l, FORMAT_PROPERTY_NAME, entry->format);
+          SET_TABLE_KEY_INTEGER(l, SIZE_PROPERTY_NAME, entry->size);
+          SET_TABLE_KEY_INTEGER(l, TAG_PROPERTY_NAME, entry->tag);
+        }
         SET_TABLE_KEY_STRING(l, VALUE_PROPERTY_NAME, value);
-        if (entry->format != EXIF_FORMAT_ASCII) {
+        if (notOnlyValue && (entry->format != EXIF_FORMAT_ASCII)) {
           lua_pushstring(l, DATA_PROPERTY_NAME);
           // table list with an item per component
           lua_newtable(l);
