@@ -1,5 +1,5 @@
 //#define JLS_LUA_MOD_TRACE 1
-#include "luamod.h"
+#include "lua-compat/luamod.h"
 
 #include <libexif/exif-loader.h>
 
