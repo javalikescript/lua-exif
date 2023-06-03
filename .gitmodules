@@ -1,3 +1,6 @@
 [submodule "libexif"]
 	path = libexif
 	url = https://github.com/javalikescript/libexif.git
+[submodule "lua-compat"]
+	path = lua-compat
+	url = https://github.com/javalikescript/lua-compat.git

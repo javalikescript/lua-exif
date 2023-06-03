@@ -6,6 +6,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if LUA_VERSION_NUM < 503
+#include "lua-compat/compat.h"
+#endif
+
 /*
 ********************************************************************************
 * EXIF Structures
@@ -423,7 +427,7 @@ static int luaexif_loader_gc(lua_State *l) {
 ********************************************************************************
 */
 
-#define LUA_EXIF_VERSION "0.1"
+#define LUA_EXIF_VERSION "0.2"
 #include <config.h>
 
 LUALIB_API int luaopen_exif(lua_State *l) {
